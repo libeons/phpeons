@@ -42,7 +42,7 @@ class XL
     /**
      * 月球速度计算, 传入世经数
      */
-    public static function M_v(t)
+    public static function M_v($t)
     {
         // 误差小于5%
         $v = 8399.71 - 914 * sin( 0.7848 + 8328.691425 * $t + 0.0001523 * $t * $t );
@@ -108,7 +108,7 @@ class XL
     {
         $v = 8399.70911033384;
 
-        $t  = ( $W - 3.81034 ) / $v;
+        $t = ( $W - 3.81034 ) / $v;
 
         // v的精度0.5%, 详见原文
         $t += ( $W - self::M_Lon($t, 3) ) / $v;
@@ -223,7 +223,7 @@ class XL
         $t2 = $t  * $t;
         $t3 = $t2 * $t;
         $t4 = $t3 * $t;
-        // var D,M,m,a,
+
         $dm = pi() / 180;
 
         // 日月平距角
@@ -250,71 +250,129 @@ class XL
      */
     public static function moonRad($r, $h)
     {
-        return cs_sMoon / $r * (1 + sin($h) * cs_rEar / $r);
+        return cs_sMoon() / $r * (1 + sin($h) * cs_rEar() / $r);
     }
     
-    public static function moonMinR($t,min){ //求月亮近点时间和距离,t为儒略世纪数力学时
-    var a = 27.55454988/36525, b;
-    if(min) b = -10.3302/36525; else b = 3.4471/36525;
-    t = b + a * int2((t-b)/a+0.5); //平近(远)点时间
-    var r1,r2,r3,dt;
-    //初算二次
-    dt=2/36525;
-    r1 = XL1_calc( 2, t-dt, 10 );
-    r2 = XL1_calc( 2, t,    10 );
-    r3 = XL1_calc( 2, t+dt, 10 );
-    t += (r1-r3)/(r1+r3-2*r2)*dt/2;
-    dt=0.5/36525;
-    r1 = XL1_calc( 2, t-dt, 20 );
-    r2 = XL1_calc( 2, t,    20 );
-    r3 = XL1_calc( 2, t+dt, 20 );
-    t += (r1-r3)/(r1+r3-2*r2)*dt/2;
-    //精算
-    dt = 1200/86400/36525;
-    r1 = XL1_calc( 2, t-dt, -1 );
-    r2 = XL1_calc( 2, t,    -1 );
-    r3 = XL1_calc( 2, t+dt, -1 );
-    t += (r1-r3)/(r1+r3-2*r2)*dt/2;
-    r2+= (r1-r3)/(r1+r3-2*r2)*(r3-r1)/8;
-    var re=new Array(t,r2);
-    return re;
+    /**
+     * 求月亮近点时间和距离, t为儒略世纪数力学时
+     */
+    public static function moonMinR($t, $min)
+    {
+        $a = 27.55454988 / 36525;
+
+        if ($min) {
+            $b = -10.3302 / 36525;
+        } else {
+            $b = 3.4471 / 36525;
+        }
+
+        // 平近(远)点时间
+        $t = $b + $a * int2(($t - $b) / $a + 0.5);
+
+        // 初算二次
+        $dt =2 / 36525;
+        $r1 = XL1_calc( 2, $t - $dt, 10 );
+        $r2 = XL1_calc( 2, $t,       10 );
+        $r3 = XL1_calc( 2, $t + $dt, 10 );
+        $t += ($r1 - $r3) / ($r1 + $r3 - 2 * $r2) * $dt / 2;
+        $dt = 0.5 / 36525;
+        $r1 = XL1_calc( 2, $t - $dt, 20 );
+        $r2 = XL1_calc( 2, $t,       20 );
+        $r3 = XL1_calc( 2, $t + $dt, 20 );
+        $t += ($r1 - $r3) / ($r1 + $r3 - 2 * $r2) * $dt / 2;
+        // 精算
+        $dt  = 1200 / 86400 / 36525;
+        $r1  = XL1_calc( 2, $t - $dt, -1 );
+        $r2  = XL1_calc( 2, $t,       -1 );
+        $r3  = XL1_calc( 2, $t + $dt, -1 );
+        $t  += ($r1 - $r3) / ($r1 + $r3 - 2 * $r2) * $dt         / 2;
+        $r2 += ($r1 - $r3) / ($r1 + $r3 - 2 * $r2) * ($r3 - $r1) / 8;
+    
+        $re = [$t, $r2];
+
+        return $re;
     }
-    public static function moonNode($t,asc){//月亮升交点
-    var a = 27.21222082/36525, b;
-    if(asc) b = 21/36525; else b = 35/36525;
-    t = b + a * int2((t-b)/a+0.5); //平升(降)交点时间
-    var w,v,w2, dt;
-    dt = 0.5 /36525; w = XL1_calc( 1, t, 10 ); w2 = XL1_calc( 1, t+dt, 10 ); v = (w2-w)/dt; t-=w/v;
-    dt = 0.05/36525; w = XL1_calc( 1, t, 40 ); w2 = XL1_calc( 1, t+dt, 40 ); v = (w2-w)/dt; t-=w/v;
-    w = XL1_calc( 1, t, -1 );  t-=w/v;
-    var re=new Array(t,XL1_calc( 0, t, -1 ));
-    return re;
+
+    /**
+     * 月亮升交点
+     */
+    public static function moonNode($t, $asc)
+    {
+        $a = 27.21222082 / 36525;
+
+        if ($asc) {
+            $b = 21 / 36525;
+        } else {
+            $b = 35 / 36525;
+        }
+
+        // 平升(降)交点时间
+        $t = $b + $a * int2(($t - $b) / $a + 0.5);
+
+        $dt = 0.5  / 36525;
+        $w  = XL1_calc( 1, $t, 10 );
+        $w2 = XL1_calc( 1, $t + $dt, 10 );
+        $v  = ($w2 - $w) / $dt;
+        $t -= $w / $v;
+        
+        $dt = 0.05 / 36525;
+        $w  = XL1_calc( 1, $t, 40 );
+        $w2 = XL1_calc( 1, $t + $dt, 40 );
+        $v  = ($w2 - $w) / $dt;
+        $t -= $w / $v;
+        
+        $w  = XL1_calc( 1, $t, -1 );
+        $t -= $w / $v;
+
+        $re = [$t, XL1_calc( 0, $t, -1 )];
+
+        return $re;
     }
-    public static function earthMinR($t,min){ //地球近远点
-    var a =365.25963586/36525, b;
-    if(min) b = 1.7/36525; else b = 184.5/36525;
-    t = b + a * int2((t-b)/a+0.5); //平近(远)点时间
-    var r1,r2,r3,dt;
-    //初算二次
-    dt=3/36525;
-    r1 = XL0_calc( 0,2, t-dt, 10 );
-    r2 = XL0_calc( 0,2, t,    10 );
-    r3 = XL0_calc( 0,2, t+dt, 10 );
-    t += (r1-r3)/(r1+r3-2*r2)*dt/2; //误差几个小时
-    dt=0.2/36525;
-    r1 = XL0_calc( 0,2, t-dt, 80 );
-    r2 = XL0_calc( 0,2, t,    80 );
-    r3 = XL0_calc( 0,2, t+dt, 80 );
-    t += (r1-r3)/(r1+r3-2*r2)*dt/2; //误差几分钟
-    //精算
-    dt = 0.01/36525;
-    r1 = XL0_calc( 0,2, t-dt, -1 );
-    r2 = XL0_calc( 0,2, t,    -1 );
-    r3 = XL0_calc( 0,2, t+dt, -1 );
-    t += (r1-r3)/(r1+r3-2*r2)*dt/2; //误差小于秒
-    r2+= (r1-r3)/(r1+r3-2*r2)*(r3-r1)/8;
-    var re=new Array(t,r2);
-    return re;
+
+    /**
+     * 地球近远点
+     */
+    public static function earthMinR($t, $min)
+    {
+        $a = 365.25963586 / 36525;
+
+        if ($min) {
+            $b = 1.7 / 36525;
+        } else {
+            $b = 184.5 / 36525;
+        }
+
+        // 平近(远)点时间
+        $t = $b + $a * int2(($t - $b) / $a + 0.5);
+        
+        // 初算二次
+        $dt = 3 / 36525;
+        $r1 = XL0_calc( 0, 2, $t - $dt, 10 );
+        $r2 = XL0_calc( 0, 2, $t,       10 );
+        $r3 = XL0_calc( 0, 2, $t + $dt, 10 );
+        // 误差几个小时
+        $t += ($r1 - $r3) / ($r1 + $r3 - 2 * $r2) * $dt / 2;
+        
+        $dt = 0.2 / 36525;
+        $r1 = XL0_calc( 0, 2, $t - $dt, 80 );
+        $r2 = XL0_calc( 0, 2, $t,       80 );
+        $r3 = XL0_calc( 0, 2, $t + $dt, 80 );
+        // 误差几分钟
+        $t += ($r1 - $r3) / ($r1 + $r3 - 2 * $r2) * $dt / 2;
+        
+        // 精算
+        $dt = 0.01 / 36525;
+        $r1 = XL0_calc( 0, 2, $t - $dt, -1 );
+        $r2 = XL0_calc( 0, 2, $t,       -1 );
+        $r3 = XL0_calc( 0, 2, $t + $dt, -1 );
+        // 误差小于秒
+        $t  += ($r1 - $r3) / ($r1 + $r3 - 2 * $r2) * $dt / 2;
+
+        $r2 += ($r1 - $r3) / ($r1 + $r3 - 2 * $r2) * ($r3 - $r1) / 8;
+
+        $re = [$t, $r2];
+
+        return $re;
     }
 
 }
