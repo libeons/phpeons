@@ -766,39 +766,51 @@ class Lunar
  	}
 
  	/**
- 	 * 命理八字计算。jd为格林尼治UT(J2000起算),J为本地经度,返回在物件ob中
+ 	 * 命理八字计算
+ 	 *
+ 	 * jd为格林尼治UT(J2000起算), J为本地经度, 返回在物件ob中
  	 */
  	public static function mingLiBaZi($jd, $J, $ob)
  	{
-		var i, c, v;
 		// 力学时
-		var jd2 = jd+dt_T(jd);
+		$jd2 = $jd + dt_T($jd);
 		// 此刻太阳视黄经
-		var w = XL.S_aLon( jd2/36525, -1 );
+		$w = XL::S_aLon( $jd2 / 36525, -1 );
 		// 1984年立春起算的节气数(不含中气)
-		var k = int2( (w/pi2*360+45+15*360)/30 );
+		$k = int2( ($w / Constant::pi2 * 360 + 45 + 15 * 360) / 30 );
 		// 本地真太阳时(使用低精度算法计算时差)
-		jd += pty_zty2(jd2/36525)+J/Math.PI/2;
-		ob.bz_zty = JD.timeStr(jd);
+		$jd += pty_zty2($jd2 / 36525) + $J / Constant::PI / 2;
+		$ob->bz_zty = JD::timeStr($jd);
 
 		// 转为前一日23点起算(原jd为本日中午12点起算)
-		jd += 13/24;
+		$jd += 13 / 24;
 		// 日数与时辰
-		var D = Math.floor(jd), SC = int2( (jd-D)*12 );
+		$D  = floor($jd);
+		$SC = int2( ($jd - $D) * 12 );
 
-		v = int2(k/12+6000000);  ob.bz_jn = this.Gan[v%10]+this.Zhi[v%12];
-		v = k+2+60000000;        ob.bz_jy = this.Gan[v%10]+this.Zhi[v%12];
-		v = D - 6 + 9000000;     ob.bz_jr = this.Gan[v%10]+this.Zhi[v%12];
-		v = (D-1)*12+90000000+SC;ob.bz_js = this.Gan[v%10]+this.Zhi[v%12];
+		$v = int2($k / 12 + 6000000);
+		$ob->bz_jn = self::$Gan[$v % 10] + self::$Zhi[$v % 12];
+
+		$v = $k + 2 + 60000000;
+		$ob->bz_jy = self::$Gan[$v % 10] + self::$Zhi[$v % 12];
+		
+		$v = $D - 6 + 9000000;
+		$ob->bz_jr = self::$Gan[$v % 10] + self::$Zhi[$v % 12];
+		
+		$v = ($D - 1) * 12 + 90000000 + $SC;
+		$ob->bz_js = self::$Gan[$v % 10] + self::$Zhi[$v % 12];
 
 		// 全天纪时表
-		v-= SC, ob.bz_JS = '';
+		$v -= $SC;
+		$ob->bz_JS = '';
+
 		// 一天中包含有13个纪时
-		for(i=0; i<13; i++){
+		for ($i = 0; $i < 13; i++) {
 			// 各时辰的八字
-			c = this.Gan[(v+i)%10]+this.Zhi[(v+i)%12];
-			if(SC==i) ob.bz_js=c, c = '<font color=red>'+c+'</font>';//红色显示这时辰
-			ob.bz_JS += (i?' ':'') + c;
+			$c = self::$Gan[($v + $i) % 10] + self::$Zhi[($v + $i) % 12];
+			if ((int) $SC === $i) {
+				$ob->bz_js = $c;
+			}
 		}
  	}
 
