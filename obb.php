@@ -3,7 +3,7 @@
 /**
  * 农历
  */
-class Lunar
+class obb
 {
 	private static $JNB = [
 	    -2069, 45, 0, '夏', '禹', '', '禹',
@@ -814,4 +814,49 @@ class Lunar
 		}
  	}
 
+	/**
+	 * 精气
+	 */
+	public static function qi_accurate ($W)
+	{
+		$t = XL::S_aLon_t($W) * 36525;
+
+		return $t - dt_T($t) + 8 / 24;
+	}
+
+	/**
+	 * 精朔
+	 */
+	public static function so_accurate ($W)
+	{
+		$t = XL::MS_aLon_t($W) * 36525;
+
+		return $t - dt_T($t) + 8 / 24;
+	}
+
+	/**
+	 * 精气
+	 */
+	public static function qi_accurate2($jd)
+	{
+		$d = Constant::pi / 12;
+		$w = floor(($jd + 293) / 365.2422 * 24) * $d;
+		$a = self::qi_accurate($w);
+		if ($a - $jd >  5) {
+			return self::qi_accurate( $w - $d );
+		}
+		if ($a - $jd <- 5) {
+			return self::qi_accurate( $w + $d );
+		}
+
+		return a;
+	}
+
+	/**
+	 * 精朔
+	 */
+	public static function so_accurate2($jd)
+	{
+		return self::so_accurate( floor(($jd + 8) / 29.5306) * Constant::pi*2 );
+	}
 }
