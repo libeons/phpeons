@@ -1,0 +1,28 @@
+{
+    "name": "libeons/phpeons",
+    "description": "sxwnl",
+    "license": "MIT",
+    "autoload": {
+        "files": [
+            "src/base.php",
+            "src/JD.php",
+            "src/moon.php",
+            "src/oba.php",
+            "src/planet.php",
+            "src/rad.php",
+            "src/Constant.php",
+            "src/llr.php",
+            "src/mqc.php",
+            "src/obb.php",
+            "src/pluto.php",
+            "src/SZJ.php",
+            "src/DeltaT.php",
+            "src/math.php",
+            "src/nutation.php",
+            "src/parallax.php",
+            "src/prece.php",
+            "src/XL.php",
+            "src/tools.php"
+        ]
+    }
+}

@@ -19,22 +19,22 @@ class SZJ
     /**
      * 站点地理经度, 向东测量为正
      */
-    const L  = 0;  
+    public static $L  = 0;  
 
     /**
      * 站点地理纬度
      */
-    const fa = 0;  
+    public static $fa = 0;  
 
     /**
      * TD-UT
      */
-    const dt = 0;  
+    public static $dt = 0;  
 
     /**
      * 黄赤交角
      */
-    const E = 0.409092614;
+    public static $E = 0.409092614;
 
     /**
      * 多天的升中降
@@ -75,8 +75,8 @@ class SZJ
      */
     public static function Mt($jd)
     {
-        self::dt = dt_T($jd);
-        self::E  = hcjj($jd / 36525);
+        self::$dt = dt_T($jd);
+        self::$E  = hcjj($jd / 36525);
 
         // 查找最靠近当日中午的月上中天, mod2的第1参数为本地时角近似值
         $jd -= mod2(0.1726222 + 0.966136808032357 * $jd - 0.0366 * self::dt + self::L / Constant::pi2, 1);
@@ -150,8 +150,8 @@ class SZJ
      */
     public static function St($jd)
     {
-        self::dt = dt_T($jd);
-        self::E  = hcjj($jd / 36525);
+        self::$dt = dt_T($jd);
+        self::$E  = hcjj($jd / 36525);
 
         // 查找最靠近当日中午的日上中天, mod2的第1参数为本地时角近似值
         $jd -= mod2($jd + self::L / Constant::pi2, 1);
@@ -248,8 +248,8 @@ class SZJ
         }
         
         // 设置站点参数
-        self::L = $Jdl;
-        self::fa = $Wdl; // !!!
+        self::$L = $Jdl;
+        self::$fa = $Wdl; // !!!
         $sq /= 24;
         
         for ($i = 0; $i < $n; $i++) {

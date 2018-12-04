@@ -1,6 +1,6 @@
 <?php
 
-class JD
+class JDClass
 {
     public $Y = 2000;
     public $M = 1;
@@ -19,7 +19,7 @@ class JD
         $n = 0;
         $G = 0;
         // 判断是否为格里高利历日1582*372+10*31+15
-        if($y * 372 + $m * 31 + int2($d) >= 588829) {
+        if ($y * 372 + $m * 31 + int2($d) >= 588829) {
             $G = 1;
         }
         if ($m <= 2) {
@@ -164,7 +164,6 @@ class JD
      */
     public static function timeStr($jd)
     {
-        var h,m,s;
         $jd += 0.5;
         $jd = ($jd - int2($jd));
 
