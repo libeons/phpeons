@@ -92,7 +92,7 @@ function XL1_calc($zn, $t, $n)
 
     for ($i = 0; $i < count($ob); $i++, $tn *= $t) {
         $F = $ob[$i];
-        $N = int2( $n * count(F) / count($ob[0]) + 0.5 );
+        $N = int2( $n * count($F) / count($ob[0]) + 0.5 );
         if ($i) {
             $N += 6;
         }

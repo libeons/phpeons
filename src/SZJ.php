@@ -39,14 +39,14 @@ class SZJ
     /**
      * 多天的升中降
      */
-    protected $rts = [];
+    protected static $rts = [];
 
     /**
      * h地平纬度, w赤纬, 返回时角
      */
     public static function getH($h, $w)
     {
-        $c = ( sin($h) - sin(self::fa) * sin($w) ) / cos(self::fa) / cos($w);
+        $c = ( sin($h) - sin(self::$fa) * sin($w) ) / cos(self::$fa) / cos($w);
         if (abs($c) > 1) {
             return Constant::pi;
         }
@@ -59,14 +59,14 @@ class SZJ
     public static function Mcoord($jd, $H0, $r)
     {
         // 低精度月亮赤经纬
-        $z = m_coord( ($jd + self::dt) / 36525, 40, 30, 8 );
+        $z = m_coord( ($jd + self::$dt) / 36525, 40, 30, 8 );
         // 转为赤道坐标
-        $z = llrConv( $z, self::E );
+        $z = llrConv( $z, self::$E );
         // 得到此刻天体时角
-        $r['H'] = rad2rrad( pGST($jd, self::dt) + self::L - $z[0] );
+        $r['H'] = rad2rrad( pGST($jd, self::$dt) + self::$L - $z[0] );
         // 升起对应的时角
         if ($H0) {
-            $r['H0'] = self::getH( 0.7275 * cs_rEar / $z[2] - 34 * 60 / Constant::rad, $z[1] );
+            $r['H0'] = self::getH( 0.7275 * Constant::cs_rEar / $z[2] - 34 * 60 / Constant::rad, $z[1] );
         }
     }
 
@@ -79,7 +79,7 @@ class SZJ
         self::$E  = hcjj($jd / 36525);
 
         // 查找最靠近当日中午的月上中天, mod2的第1参数为本地时角近似值
-        $jd -= mod2(0.1726222 + 0.966136808032357 * $jd - 0.0366 * self::dt + self::L / Constant::pi2, 1);
+        $jd -= mod2(0.1726222 + 0.966136808032357 * $jd - 0.0366 * self::$dt + self::$L / Constant::pi2, 1);
 
         $r = new \stdClass;
         $sv = Constant::pi2 * 0.966;
@@ -115,14 +115,14 @@ class SZJ
 
         // 太阳坐标(修正了光行差)
         $z = [
-            XL::E_Lon( ($jd + self::dt) / 36525, 5 ) + Constant::pi - 20.5 / Constant::rad,
+            XL::E_Lon( ($jd + self::$dt) / 36525, 5 ) + Constant::pi - 20.5 / Constant::rad,
             0,
             1,
         ];
         // 转为赤道坐标
-        $z = llrConv( $z, self::E );
+        $z = llrConv( $z, self::$E );
         // 得到此刻天体时角
-        $r->H = rad2rrad( pGST($jd, self::dt) + self::L - $z[0] );
+        $r->H = rad2rrad( pGST($jd, self::$dt) + self::$L - $z[0] );
 
         // 地平以下50分
         if ($xm === 10 || $xm === 1) {
@@ -154,7 +154,7 @@ class SZJ
         self::$E  = hcjj($jd / 36525);
 
         // 查找最靠近当日中午的日上中天, mod2的第1参数为本地时角近似值
-        $jd -= mod2($jd + self::L / Constant::pi2, 1);
+        $jd -= mod2($jd + self::$L / Constant::pi2, 1);
 
         $r = new \stdClass;
         $sv = Constant::pi2;
@@ -262,35 +262,35 @@ class SZJ
             if($i >= 0 && $i < $n) {
                 $r = self::St($jd + $i + $sq);
                 // 升
-                self::$rts[ $i ]->s = $JD.timeStr($r->s - $sq);
+                self::$rts[ $i ]->s = JDClass::timeStr($r->s - $sq);
                 // 中
-                self::$rts[ $i ]->z = $JD.timeStr($r->z - $sq);
+                self::$rts[ $i ]->z = JDClass::timeStr($r->z - $sq);
                 // 降
-                self::$rts[ $i ]->j = $JD.timeStr($r->j - $sq);
+                self::$rts[ $i ]->j = JDClass::timeStr($r->j - $sq);
                 // 晨
-                self::$rts[ $i ]->c = $JD.timeStr($r->c - $sq);
+                self::$rts[ $i ]->c = JDClass::timeStr($r->c - $sq);
                 // 昏
-                self::$rts[ $i ]->h = $JD.timeStr($r->h - $sq);
-                // 光照时间,timeStr()内部+0.5,所以这里补上-0.5
-                self::$rts[ $i ]->ch = $JD.timeStr($r->h - $r->c - 0.5);
+                self::$rts[ $i ]->h = JDClass::timeStr($r->h - $sq);
+                // 光照时间, timeStr()内部+0.5, 所以这里补上-0.5
+                self::$rts[ $i ]->ch = JDClass::timeStr($r->h - $r->c - 0.5);
                 // 昼长
-                self::$rts[ $i ]->sj = $JD.timeStr($r->j - $r->s - 0.5);
+                self::$rts[ $i ]->sj = JDClass::timeStr($r->j - $r->s - 0.5);
             }
             // 月亮
             $r = self::Mt($jd + $i + $sq);
             $c = int2($r->s - $sq + 0.5) - $jd;
             if ($c >= 0 && $c < $n) {
-                self::$rts[ $c ]->Ms = JD::timeStr($r->s - $sq);
+                self::$rts[ $c ]->Ms = JDClass::timeStr($r->s - $sq);
             }
 
             $c = int2($r->z - $sq + 0.5) - $jd;
             if ($c >= 0 && $c < $n) {
-                self::$rts[ $c ]->Mz = JD::timeStr($r->z - $sq);
+                self::$rts[ $c ]->Mz = JDClass::timeStr($r->z - $sq);
             }
 
             $c = int2($r->j - $sq + 0.5) - $jd;
             if ($c >= 0 && $c < $n) {
-                self::$rts[ $c ]->Mj = JD::timeStr($r->j - $sq);
+                self::$rts[ $c ]->Mj = JDClass::timeStr($r->j - $sq);
             }
 
         }

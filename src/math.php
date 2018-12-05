@@ -13,7 +13,7 @@ function int2($v)
  */
 function rad2mrad($v)
 { 
-    $v = $v % (2 * Constant::pi);
+    $v = fmod($v, 2 * Constant::pi);
 
     if ($v < 0) {
         return $v + 2 * Constant::pi;
@@ -27,7 +27,7 @@ function rad2mrad($v)
  */
 function rad2rrad($v)
 {
-    $v = $v % (2 * Constant::pi);
+    $v = fmod($v, 2 * Constant::pi);
 
     if ($v <= -Constant::pi) {
         return $v + 2 * Constant::pi;

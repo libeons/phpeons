@@ -131,7 +131,7 @@ function nutation($t, $zq)
             $B[$i + 4] * $Om
         ) / Constant::rad;
         // 只算周期大于zq天的项
-        if ($zq) { 
+        if ($zq) {
             $q = 36526 * 2 * Constant::pi * Constant::rad / (
                 1717915923.2178 * $B[$i] +
                 129596581.0481  * $B[$i + 1] +
@@ -146,11 +146,12 @@ function nutation($t, $zq)
         $dL += ($B[$i + 5] + $B[$i + 6] * $t) * sin($c) + $B[$i + 7]  * cos($c);
         $dE += ($B[$i + 8] + $B[$i + 9] * $t) * cos($c) + $B[$i + 10] * sin($c);
     }
+
     // 返回IAU2000B章动值, dL是黄经章动, dE是交角章动
-    return [
-        $dL /= 10000000 * Constant::rad,
-        $dE /= 10000000 * Constant::rad,
-    ];
+    $dL /= 10000000 * Constant::rad;
+    $dE /= 10000000 * Constant::rad;
+
+    return [ $dL, $dE ];
 }
 
 /**

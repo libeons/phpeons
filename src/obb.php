@@ -615,7 +615,7 @@ class obb
             }
 
             // 年号及年次
-            $c = $ob[ $i+6 ] . ($y - $j + 1 + $ob[ $i+2 ]) +'年'; 
+            $c = $ob[ $i+6 ] . ($y - $j + 1 . $ob[ $i+2 ]) . '年';
             // i为年号元年, i+3朝代, i+4朝号, i+5皇帝, i+6年号
             $s .= ( $s ? ';' : '')
                . '[' . $ob[ $i+3 ] . ']'
@@ -632,7 +632,7 @@ class obb
      */
     public static function getDayName($u, $r)
     {
-        $d = $u->Lmc . (strlen($u->Lmc) < 2 ? '月' : '') + $u->Ldc;
+        $d = $u->Lmc . (strlen($u->Lmc) < 2 ? '月' : '') . $u->Ldc;
 
         // Fjia(放假)
         if ($u->Lleap !== '闰') {
@@ -704,7 +704,6 @@ class obb
                 $r->C .= '瑶族盘王节 ';
             } elseif ($d === '十二初八') {
                 $r->B .= '腊八节 ';
-            } else {
             }
         }
 
@@ -729,7 +728,7 @@ class obb
                 $r->A .= $u->Ljq . ' ';
                 $r->Fjia = 1;
             } else {
-                $r->B .= $u->Ljq + ' ';
+                $r->B .= $u->Ljq . ' ';
             }
         }
 
@@ -779,7 +778,7 @@ class obb
         // 1984年立春起算的节气数(不含中气)
         $k = int2( ($w / Constant::pi2 * 360 + 45 + 15 * 360) / 30 );
         // 本地真太阳时(使用低精度算法计算时差)
-        $jd += (pty_zty2($jd2 / 36525) + $J / Constant::pi / 2);
+        $jd += pty_zty2($jd2 / 36525) + $J / Constant::pi / 2;
         $ob->bz_zty = JDClass::timeStr($jd);
 
         // 转为前一日23点起算(原jd为本日中午12点起算)
@@ -848,7 +847,7 @@ class obb
             return self::qi_accurate( $w + $d );
         }
 
-        return a;
+        return $a;
     }
 
     /**
@@ -856,6 +855,6 @@ class obb
      */
     public static function so_accurate2($jd)
     {
-        return self::so_accurate( floor(($jd + 8) / 29.5306) * Constant::pi*2 );
+        return self::so_accurate( floor(($jd + 8) / 29.5306) * Constant::pi * 2 );
     }
 }

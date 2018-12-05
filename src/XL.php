@@ -182,7 +182,7 @@ class XL
             + 0.0334166 * cos(4.669257 +  628.307585 * $t)
             + 0.0002061 * cos(2.67823  +  628.307585 * $t) * $t
             + 0.000349  * cos(4.6261   + 1256.61517  * $t)
-            - 20.5 / rad()
+            - 20.5 / Constant::rad
         );
 
         $v = 7771.38
@@ -210,7 +210,7 @@ class XL
         ) / $v;
         
         $t += ( $W - self::E_Lon($t, 8) - pi()
-            + (20.5 + 17.2 * sin(2.1824 - 33.75705 * $t)) / rad() ) / $v;
+            + (20.5 + 17.2 * sin(2.1824 - 33.75705 * $t)) / Constant::rad ) / $v;
 
         return $t;
     }
@@ -250,7 +250,7 @@ class XL
      */
     public static function moonRad($r, $h)
     {
-        return cs_sMoon() / $r * (1 + sin($h) * cs_rEar() / $r);
+        return Constant::cs_sMoon / $r * (1 + sin($h) * Constant::cs_rEar / $r);
     }
     
     /**

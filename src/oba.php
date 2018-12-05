@@ -101,16 +101,16 @@ class oba
 
             // 放假的节日
             if ($type === '#') {
-                $r->A += $s + ' ';
+                $r->A .= $s . ' ';
                 $r->Fjia = 1;
             }
             // 主要
             if ($type === 'I') {
-                $r->B += $s + ' '; 
+                $r->B .= $s . ' ';
             }
             // 其它
             if ($type === '.') {
-                $r->C += $s + ' '; 
+                $r->C .= $s . ' ';
             }
         }
 
@@ -126,8 +126,8 @@ class oba
         }
 
         // d日在本月的第几个星期某
-        $w  = $m0 + $w  + $u->week;
-        $w2 = $m0 + $w2 + $u->week;
+        $w  = $m0 . $w  . $u->week;
+        $w2 = $m0 . $w2 . $u->week;
 
         $length = count(self::$wFtv);
         for ($i = 0; $i < $length; $i++)
@@ -144,16 +144,16 @@ class oba
 
             // 放假的节日
             if ($type === '#') {
-                $r->A += $s + ' ';
+                $r->A .= $s . ' ';
                 $r->Fjia = 1;
             }
             // 主要
             if ($type === 'I') {
-                $r->B += $s + ' '; 
+                $r->B .= $s . ' ';
             }
             // 其它
             if ($type === '.') {
-                $r->C += $s + ' '; 
+                $r->C .= $s . ' ';
             }
         }
     }

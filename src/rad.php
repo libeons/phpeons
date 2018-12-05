@@ -51,10 +51,10 @@ function rad2strE($d, $tim, $ext)
         $a++;
     }
 
-    $a = '   '   + $a;
-    $b = '0'     + $b;
-    $c = '0'     + $c;
-    $d = '00000' + $d;
+    $a = '   '   . $a;
+    $b = '0'     . $b;
+    $c = '0'     . $c;
+    $d = '00000' . $d;
 
     $s .= substr($a, strlen($a) - 3, 3) . $w1;
     $s .= substr($b, strlen($b) - 2, 2) . $w2;
@@ -85,8 +85,7 @@ function rad2str2($d)
     $s  = '+';
     $w1 = '°';
     $w2 = "'";
-    $w3 = '"';
-    
+
     if ($d < 0) {
         $d = -$d;
         $s = '-';
@@ -102,11 +101,11 @@ function rad2str2($d)
         $a++;
     }
     
-    $a = '   ' + $a;
-    $b = '0'   + $b;
+    $a = '   ' . $a;
+    $b = '0'   . $b;
 
-    $s += substr($a, strlen($a) - 3, 3) + $w1;
-    $s += substr($b, strlen($b) - 2, 2) + $w2;
+    $s .= substr($a, strlen($a) - 3, 3) . $w1;
+    $s .= substr($b, strlen($b) - 2, 2) . $w2;
 
     return $s;
 }

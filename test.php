@@ -5,7 +5,10 @@ require 'vendor/autoload.php';
 $Y = 2018;
 $M = 2;
 $D = 4;
+$his = '05:28:29';
 $his = '05:28:30';
+// $his = '11:14:20';
+// $his = '11:14:21';
 $J = 116.383333;
 
 $t = timeStr2hour($his);
